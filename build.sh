@@ -7,5 +7,5 @@ pip install -r requirements.txt
 # Diagnostic: List files to see if they exist
 ls -R static
 
-python manage.py collectstatic --no-input --clear
+python manage.py collectstatic --no-input
 python manage.py migrate
