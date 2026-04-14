@@ -135,6 +135,9 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
+# Compatibility for django-cloudinary-storage
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
 # Modern Storage Configuration (Django 4.2+ / 6.0)
 STORAGES = {
     "default": {
