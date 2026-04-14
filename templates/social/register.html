@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div style="max-width: 520px; margin: 80px auto; padding: 0 16px;">
+    <div class="card-pro glass stagger-up" style="padding: 64px 48px; border: none; box-shadow: var(--shadow-premium); text-align: center;">
+        <div style="margin-bottom: 40px;">
+            <p class="tagline">Scale your career</p>
+            <h2 style="font-size: 2.25rem; margin-top: 8px;">Join NexLink Pro</h2>
+        </div>
+        
+        <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+                <div style="margin-bottom: 24px; text-align: left;">
+                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px; margin-left: 4px;">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <p style="color: var(--acc-pink); font-size: 0.7rem; margin-top: 6px; font-weight: 600;">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn-pro btn-pro-primary" style="width: 100%; height: 60px; font-size: 1.1rem; border-radius: 12px; margin-top: 16px;">Create My Profile</button>
+        </form>
+
+        <p style="margin-top: 40px; font-size: 0.95rem; color: var(--text-muted);">
+            Already scaling? <a href="{% url 'login' %}" style="font-weight: 700; color: var(--primary);">Log in here</a>
+        </p>
+    </div>
+</div>
+
+<style>
+    input {
+        width: 100%; height: 56px; padding: 0 24px; border: 2px solid var(--border-color) !important; border-radius: 12px; font-family: var(--font-body); font-size: 1rem; transition: var(--transition); outline: none; background: #fff;
+    }
+    input:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.05); }
+</style>
+{% endblock %}

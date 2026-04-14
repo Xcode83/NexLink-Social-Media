@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 64px auto; padding: 0 24px;">
+    <div style="margin-bottom: 48px;" class="stagger-up">
+        <p class="tagline">Communication Hub</p>
+        <h1 style="font-size: 2.5rem; margin-top: 12px;">Your Inbox</h1>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 48px;">
+        <!-- Conversations List -->
+        <div class="stagger-up">
+            <h3 style="margin-bottom: 24px; font-size: 1.25rem;">Recent Conversations</h3>
+            <div class="card-pro glass" style="overflow: hidden; border: none; box-shadow: var(--shadow-premium);">
+                {% for conversation in conversations %}
+                    <a href="{% url 'chat' conversation.username %}" style="display: flex; align-items: center; gap: 20px; padding: 24px; border-bottom: 1px solid var(--border-color); color: inherit; transition: var(--transition);">
+                        <img src="{{ conversation.profile.image.url }}" alt="Avatar" style="width: 64px; height: 64px; border-radius: 20px; object-fit: cover; box-shadow: var(--shadow-subtle);">
+                        <div style="flex: 1;">
+                            <h4 style="font-size: 1.1rem;">{{ conversation.username }}</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Shared professional journey</p>
+                        </div>
+                    </a>
+                {% empty %}
+                    <div style="padding: 64px; text-align: center; color: var(--text-muted);">
+                        <i class="fas fa-comment-slash" style="font-size: 2rem; margin-bottom: 16px;"></i>
+                        <p>No active dialogs.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Network Activity (Requests) -->
+        <div class="stagger-up">
+            <h3 style="margin-bottom: 24px; font-size: 1.25rem;">Network Requests</h3>
+            <div class="card-pro glass" style="padding: 32px;">
+                {% for request_obj in friend_requests %}
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 24px; background: rgba(108, 99, 255, 0.05); border-radius: 20px; margin-bottom: 16px; border: 1px solid rgba(108, 99, 255, 0.1);">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <img src="{{ request_obj.from_user.profile.image.url }}" alt="Avatar" style="width: 52px; height: 52px; border-radius: 12px; object-fit: cover;">
+                            <div>
+                                <h5 style="font-size: 1rem;">{{ request_obj.from_user.username }}</h5>
+                                <p style="font-size: 0.8rem; color: var(--text-muted);">{{ request_obj.from_user.profile.headline|default:"Professional" }}</p>
+                            </div>
+                        </div>
+                        <a href="{% url 'accept_friend_request' request_obj.id %}" class="btn-pro btn-pro-primary" style="padding: 10px 20px; font-size: 0.85rem;">Accept</a>
+                    </div>
+                {% empty %}
+                    <div style="text-align: center; padding: 48px; border: 2px dashed var(--border-color); border-radius: 24px;">
+                        <p style="color: var(--text-muted);">No pending invitations.</p>
+                        <a href="{% url 'explore' %}" style="color: var(--primary); font-weight: 700; display: block; margin-top: 12px;">Explore People</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

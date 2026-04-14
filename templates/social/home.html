@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="grid-3-col">
+    <!-- Left Sidebar: Mini Profile -->
+    <aside class="stagger-up">
+        <div class="card-pro glass" style="text-align: center; padding-top: 32px;">
+            <div style="padding: 0 24px 32px;">
+                <img src="{{ user.profile.image.url }}" alt="Avatar" style="width: 80px; height: 80px; border-radius: 20px; object-fit: cover; border: 4px solid #fff; box-shadow: var(--shadow-subtle); margin-bottom: 16px;">
+                <h3 style="font-size: 1.1rem;">{{ user.username }}</h3>
+                <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 4px;">{{ user.profile.headline|default:"Professional Member" }}</p>
+            </div>
+            
+            <div style="border-top: 1px solid var(--border-color); padding: 16px 24px; text-align: left;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 8px;">
+                    <span style="color: var(--text-muted);">Contributions</span>
+                    <span style="color: var(--primary); font-weight: 700;">{{ user.posts.count }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                    <span style="color: var(--text-muted);">Network</span>
+                    <span style="color: var(--primary); font-weight: 700;">{{ user.profile.friends.count|default:"0" }}</span>
+                </div>
+            </div>
+            
+            <a href="{% url 'profile' user.username %}" style="display: block; padding: 16px; background: rgba(0,0,0,0.02); text-decoration: none; color: var(--primary); font-size: 0.8rem; font-weight: 700; border-top: 1px solid var(--border-color);">
+                View My Profile
+            </a>
+        </div>
+    </aside>
+
+    <!-- Center Column: Post Box & Feed -->
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+        <!-- Create Post Box (LinkedIn Style) -->
+        <div class="card-pro glass stagger-up" style="padding: 20px;">
+            <div style="display: flex; gap: 16px; align-items: flex-start;">
+                <img src="{{ user.profile.image.url }}" alt="Me" style="width: 48px; height: 48px; border-radius: 12px; object-fit: cover;">
+                <form method="POST" enctype="multipart/form-data" style="flex: 1;">
+                    {% csrf_token %}
+                    <div style="margin-bottom: 16px;">
+                        {{ form.content }}
+                        <style>
+                            textarea {
+                                width: 100%; min-height: 50px; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 16px; font-family: var(--font-body); font-size: 0.95rem; outline: none; transition: var(--transition); background: rgba(0,0,0,0.02); resize: none;
+                            }
+                            textarea:focus { border-color: var(--primary); background: #fff; }
+                        </style>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <button type="button" onclick="document.getElementById('id_image').click()" style="background: none; border: none; color: var(--text-muted); font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-image" style="color: var(--primary);"></i> Media
+                        </button>
+                        <div style="display: none;">{{ form.image }}</div>
+                        <button type="submit" class="btn-pro btn-pro-primary" style="padding: 8px 24px; font-size: 0.85rem;">Post</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Feed List -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+            {% for post in posts %}
+                <article class="card-pro glass stagger-up">
+                    <div style="padding: 24px;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                            <img src="{{ post.author.profile.image.url }}" alt="Author" class="post-avatar">
+                            <div>
+                                <h4 style="font-size: 0.95rem;"><a href="{% url 'profile' post.author.username %}" style="color: inherit; text-decoration: none;">{{ post.author.username }}</a></h4>
+                                <p style="font-size: 0.75rem; color: var(--text-muted);">{{ post.author.profile.headline|default:"Professional" }} &bull; {{ post.created_at|timesince }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="post-content">
+                            {{ post.content }}
+                        </div>
+
+                        {% if post.image %}
+                            <img src="{{ post.image.url }}" alt="Post Content" style="width: 100%; border-radius: 12px; margin-bottom: 16px;">
+                        {% endif %}
+
+                        <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-color); padding-top: 16px;">
+                            <div style="display: flex; gap: 24px;">
+                                <a href="{% url 'like_post' post.pk %}" style="text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: 600; color: var(--text-muted);">
+                                    <i class="fas fa-heart {% if user in post.likes.all %}liked animate-pop{% else %}far{% endif %}" style="font-size: 1.1rem; transition: var(--transition);"></i>
+                                    <span>{% if post.likes.count > 0 %}{{ post.likes.count }}{% endif %} Like</span>
+                                </a>
+                                <button onclick="toggleComments('{{ post.pk }}')" style="background: none; border: none; color: var(--text-muted); font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                                    <i class="far fa-comment"></i> 
+                                    <span>{% if post.comments.count > 0 %}{{ post.comments.count }}{% endif %} Comment</span>
+                                </button>
+                                <button onclick="copyPostLink('{{ post.pk }}')" style="background: none; border: none; color: var(--text-muted); font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                                    <i class="far fa-share-square"></i> Share
+                                </button>
+                            </div>
+                            
+                            {% if post.author == request.user %}
+                                <a href="{% url 'post_delete' post.pk %}" class="delete-btn" onclick="return confirm('Are you sure you want to delete this professional insight?')" style="font-size: 0.9rem;">
+                                    <i class="far fa-trash-can"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+
+                        <!-- Comments Section (Hidden by Default) -->
+                        <div id="comments-{{ post.pk }}" style="display: none; margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                            <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px;">
+                                {% for comment in post.comments.all %}
+                                    <div style="display: flex; gap: 12px;">
+                                        <img src="{{ comment.author.profile.image.url }}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 8px; object-fit: cover;">
+                                        <div style="background: rgba(0,0,0,0.03); padding: 12px 16px; border-radius: 12px; flex: 1;">
+                                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                                <h5 style="font-size: 0.85rem;">{{ comment.author.username }}</h5>
+                                                <span style="font-size: 0.7rem; color: var(--text-muted);">{{ comment.created_at|timesince }}</span>
+                                            </div>
+                                            <p style="font-size: 0.88rem;">{{ comment.content }}</p>
+                                        </div>
+                                    </div>
+                                {% empty %}
+                                    <p style="font-size: 0.85rem; color: var(--text-muted); text-align: center;">No professional discussions yet. Start one!</p>
+                                {% endfor %}
+                            </div>
+
+                            <form action="{% url 'post_comment' post.pk %}" method="POST" style="display: flex; gap: 12px; align-items: flex-start;">
+                                {% csrf_token %}
+                                <div style="flex: 1;">
+                                    {{ comment_form.content }}
+                                </div>
+                                <button type="submit" class="btn-pro btn-pro-primary" style="padding: 10px 20px; font-size: 0.8rem;">Reply</button>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Right Sidebar: Community Pulse -->
+    <aside class="stagger-up">
+        <div class="card-pro glass sticky" style="padding: 24px; top: 100px;">
+            <h4 style="font-size: 1rem; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                Trends for you <i class="fas fa-info-circle" style="font-size: 0.8rem; color: var(--text-muted);"></i>
+            </h4>
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">Trending in Tech</p>
+                    <p style="font-weight: 700; font-size: 0.9rem;">#NexLinkBeta</p>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">2.5k contributions</p>
+                </div>
+                <div>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">Design News</p>
+                    <p style="font-weight: 700; font-size: 0.9rem;">#Glassmorphism</p>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">1.8k contributions</p>
+                </div>
+                <div>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">Workplace</p>
+                    <p style="font-weight: 700; font-size: 0.9rem;">#FutureOfWork</p>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">850 contributions</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<!-- Toast Notification Implementation -->
+<div id="share-toast" class="glass" style="position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(100px); padding: 12px 32px; border-radius: var(--radius-pill); z-index: 2000; transition: var(--transition); border-left: 4px solid var(--primary);">
+    <p style="font-weight: 700; font-size: 0.85rem; color: var(--text-main);"><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 8px;"></i> Link copied to professional clipboard!</p>
+</div>
+
+<script>
+    function toggleComments(postId) {
+        const section = document.getElementById(`comments-${postId}`);
+        if (section.style.display === 'none') {
+            section.style.display = 'block';
+        } else {
+            section.style.display = 'none';
+        }
+    }
+
+    function copyPostLink(postId) {
+        const url = window.location.origin + window.location.pathname + '#post-' + postId;
+        navigator.clipboard.writeText(url).then(() => {
+            const toast = document.getElementById('share-toast');
+            toast.style.transform = 'translateX(-50%) translateY(0)';
+            setTimeout(() => {
+                toast.style.transform = 'translateX(-50%) translateY(100px)';
+            }, 3000);
+        });
+    }
+</script>
+{% endblock %}

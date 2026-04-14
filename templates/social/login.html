@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div style="max-width: 480px; margin: 100px auto; padding: 0 16px;">
+    <div class="card-pro glass stagger-up" style="padding: 64px 48px; border: none; box-shadow: var(--shadow-premium); text-align: center;">
+        <div style="margin-bottom: 40px;">
+            <h2 style="font-size: 2rem; margin-bottom: 12px;">Sign In</h2>
+            <p style="color: var(--text-muted);">Access your NexLink Pro network</p>
+        </div>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <div style="margin-bottom: 24px;">
+                <input type="text" name="username" class="form-control" placeholder="Username" required style="border-radius: 12px; height: 56px; padding: 0 24px;">
+            </div>
+            <div style="margin-bottom: 32px;">
+                <input type="password" name="password" class="form-control" placeholder="Password" required style="border-radius: 12px; height: 56px; padding: 0 24px;">
+            </div>
+            
+            <button type="submit" class="btn-pro btn-pro-primary" style="width: 100%; height: 56px; font-size: 1.1rem; border-radius: 12px;">Log in</button>
+        </form>
+
+        <div style="margin: 40px 0; position: relative;">
+            <hr style="border: 0; border-top: 1px solid var(--border-color);">
+            <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 0 16px; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 1px;">NEW TO NEXLINK?</span>
+        </div>
+
+        <a href="{% url 'register' %}" class="btn-pro btn-pro-white" style="width: 100%; border: 1px solid var(--border-color); border-radius: 12px;">Create Pro Account</a>
+    </div>
+</div>
+{% endblock %}

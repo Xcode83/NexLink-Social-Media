@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 64px auto; padding: 0 16px;">
+    <!-- Chat Header Pro -->
+    <div class="card-pro glass stagger-up" style="margin-bottom: 32px; border: none; box-shadow: var(--shadow-premium);">
+        <div class="card-content" style="padding: 24px 32px; display: flex; align-items: center; gap: 20px;">
+            <a href="{% url 'profile' other_user.username %}">
+                <img src="{{ other_user.profile.image.url }}" alt="Avatar" style="width: 64px; height: 64px; border-radius: 20px; object-fit: cover; box-shadow: var(--shadow-subtle);">
+            </a>
+            <div style="flex: 1;">
+                <h4 style="font-size: 1.25rem;"><a href="{% url 'profile' other_user.username %}" style="color: inherit;">{{ other_user.username }}</a></h4>
+                <p style="font-size: 0.85rem; color: var(--primary); font-weight: 500;">{{ other_user.profile.headline|default:"Professional Member" }}</p>
+            </div>
+            <a href="{% url 'inbox' %}" class="btn-pro btn-pro-white" style="border: 1px solid var(--border-color); padding: 10px 20px; font-size: 0.85rem;">
+                <i class="fas fa-chevron-left"></i> Inbox
+            </a>
+        </div>
+    </div>
+
+    <!-- Message History Pro -->
+    <div class="card-pro glass stagger-up" style="min-height: 500px; display: flex; flex-direction: column; border: none; box-shadow: var(--shadow-premium);">
+        <div class="card-content" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; padding: 40px;">
+            {% for message in chat_messages %}
+                <div style="max-width: 75%; padding: 16px 24px; border-radius: 24px; font-size: 1rem; line-height: 1.6; 
+                    {% if message.sender == request.user %}
+                        align-self: flex-end; background: var(--gradient-main); color: #fff; border-bottom-right-radius: 6px; box-shadow: 0 10px 30px rgba(108, 99, 255, 0.2);
+                    {% else %}
+                        align-self: flex-start; background: var(--bg-color); color: var(--text-main); border-bottom-left-radius: 6px; border: 1px solid var(--border-color);
+                    {% endif %}
+                ">
+                    {{ message.body }}
+                    <div style="font-size: 0.7rem; margin-top: 8px; opacity: 0.6; text-align: {% if message.sender == request.user %}right{% else %}left{% endif %}; font-weight: 600;">
+                        {{ message.timestamp|date:"P" }}
+                    </div>
+                </div>
+            {% empty %}
+                <div style="text-align: center; color: var(--text-muted); margin-top: 100px;">
+                    <i class="fas fa-magic" style="font-size: 3rem; margin-bottom: 24px; color: var(--primary); opacity: 0.2;"></i>
+                    <p style="font-size: 1.1rem;">Start your professional dialogue with {{ other_user.username }}.</p>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Premium Message Input -->
+        <div style="padding: 32px; background: rgba(255,255,255,0.9); border-top: 1px solid var(--border-color);">
+            <form method="POST" style="display: flex; gap: 16px;">
+                {% csrf_token %}
+                <input type="text" name="body" placeholder="Type a message..." class="form-control" style="border-radius: 20px; height: 56px; padding: 0 24px; border-color: rgba(108, 99, 255, 0.1); background: #fff;" required autofocus>
+                <button type="submit" class="btn-pro btn-pro-primary" style="height: 56px; width: 56px; border-radius: 20px; padding: 0;">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

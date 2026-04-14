@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NexLink{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* Mobile-only toggle logic */
+        @media (max-width: 991px) {
+            .nav-links-desktop { display: none !important; }
+            .nav-mobile-toggle { display: block !important; }
+        }
+        @media (min-width: 992px) {
+            .nav-mobile-toggle { display: none !important; }
+            .nav-links-desktop { display: flex !important; }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar-pro glass" style="padding: 12px 64px;">
+        <div style="display: flex; align-items: center; gap: 40px;">
+            <a href="{% url 'home' %}" class="nav-brand-pro" style="font-family: var(--font-heading); font-weight: 800; font-size: 1.5rem; background: var(--gradient-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                NexLink
+            </a>
+
+            <!-- Desktop Links -->
+            <nav class="nav-links-desktop" style="display: flex; gap: 24px; align-items: center;">
+                <a href="{% url 'home' %}" class="nav-item-pro {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'explore' %}" class="nav-item-pro">
+                        <i class="fas fa-compass"></i> Explore
+                    </a>
+                    <a href="{% url 'inbox' %}" class="nav-item-pro">
+                        <i class="fas fa-envelope"></i> Inbox
+                    </a>
+                    <a href="{% url 'profile' user.username %}" class="nav-item-pro">
+                        <i class="fas fa-user"></i> Profile
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+
+        <div class="nav-actions" style="display: flex; align-items: center; gap: 24px;">
+            <!-- Search bar integrated directly -->
+            <form action="{% url 'search_users' %}" method="GET" style="position: relative;">
+                <input type="text" name="q" placeholder="Search..." style="background: rgba(0,0,0,0.04); border: none; padding: 10px 16px 10px 40px; border-radius: 12px; width: 240px; font-size: 0.85rem;">
+                <i class="fas fa-search" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
+            </form>
+
+            {% if user.is_authenticated %}
+                <form action="{% url 'logout' %}" method="POST" id="logout-form" style="display: none;">
+                    {% csrf_token %}
+                </form>
+                <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" style="color: var(--text-muted); font-size: 1rem;"><i class="fas fa-sign-out-alt"></i></a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn-pro btn-pro-primary" style="padding: 8px 24px; font-size: 0.9rem;">Sign In</a>
+            {% endif %}
+            
+            <!-- Mobile Hamburger -->
+            <button class="nav-mobile-toggle" style="background: none; border: none; font-size: 1.25rem; cursor: pointer;">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="container-pro">
+        {% if messages %}
+            <div style="max-width: 800px; margin: 0 auto 24px;">
+                {% for message in messages %}
+                    <div class="glass" style="padding: 12px 24px; border-radius: 12px; border-left: 4px solid var(--primary); margin-bottom: 12px;">
+                        <p style="font-weight: 600; font-size: 0.85rem;">{{ message }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <style>
+        .nav-item-pro {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+        .nav-item-pro:hover, .nav-item-pro.active {
+            color: var(--primary);
+            background: rgba(108, 99, 255, 0.05);
+        }
+        .container-pro {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 24px;
+        }
+    </header>
+</body>
+</html>

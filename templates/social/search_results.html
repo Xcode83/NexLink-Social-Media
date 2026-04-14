@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 64px auto; padding: 0 24px;">
+    <div style="margin-bottom: 48px;" class="stagger-up">
+        <p class="tagline">Discovery Engine</p>
+        <h1 style="font-size: 2.5rem; margin-top: 12px;">Results for "{{ query }}"</h1>
+        <p style="color: var(--text-muted);">{{ results|length }} professionals found in the NexLink Pro network.</p>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 32px;">
+        {% for user_obj in results %}
+            <div class="card-pro glass stagger-up" style="text-align: center;">
+                <div class="card-content" style="padding: 48px 32px;">
+                    <a href="{% url 'profile' user_obj.username %}" style="display: inline-block; position: relative;">
+                        <img src="{{ user_obj.profile.image.url }}" alt="Avatar" style="width: 120px; height: 120px; border-radius: 32px; object-fit: cover; box-shadow: var(--shadow-premium);">
+                        <div style="position: absolute; bottom: 5px; right: 5px; background: #38A169; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white;"></div>
+                    </a>
+                    <h3 style="margin-top: 24px; font-size: 1.4rem;"><a href="{% url 'profile' user_obj.username %}" style="color: inherit;">{{ user_obj.username }}</a></h3>
+                    <p style="color: var(--primary); font-weight: 600; font-size: 0.9rem; margin-top: 4px;">{{ user_obj.profile.headline|default:"Professional Member" }}</p>
+                    
+                    <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 12px;">
+                        <a href="{% url 'profile' user_obj.username %}" class="btn-pro btn-pro-primary" style="width: 100%;">View Journey</a>
+                        <a href="{% url 'chat' user_obj.username %}" class="btn-pro btn-pro-white" style="width: 100%; border: 1px solid var(--border-color);">Send Message</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="card-pro glass stagger-up" style="grid-column: 1 / -1; padding: 100px; text-align: center;">
+                <i class="fas fa-search-minus" style="font-size: 4rem; color: var(--border-color); margin-bottom: 32px;"></i>
+                <h3 style="color: var(--text-muted);">No matches found for "{{ query }}"</h3>
+                <p style="margin-top: 16px;">Try adjusting your keywords or browse our <a href="{% url 'explore' %}" style="color: var(--primary); font-weight: 700;">Explore</a> section.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

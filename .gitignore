@@ -1,0 +1,44 @@
+*.py[cod]
+
+# C extensions
+*.so
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+vh
+venv
+.venv
+env
+.env
+bin
+build
+include
+share
+
+# Django
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media
+staticfiles
+/static/
+
+# IDEs
+.vscode
+.idea
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 48px auto; padding: 0 16px;">
+    <div style="margin-bottom: 48px;">
+        <h2 style="font-size: 2rem; letter-spacing: -0.5px; margin-bottom: 8px;">Explore the Network</h2>
+        <p style="color: var(--text-muted); font-size: 1.1rem;">Connect with professionals shaping the modern community.</p>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
+        {% for profile in profiles %}
+            <div class="card stagger-up" style="text-align: center; border: none; box-shadow: 0 8px 32px rgba(0,0,0,0.04);">
+                <div class="card-content" style="padding: 32px;">
+                    <a href="{% url 'profile' profile.user.username %}" style="display: inline-block; margin-bottom: 16px;">
+                        <img src="{{ profile.image.url }}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 20px; object-fit: cover; border: 4px solid var(--accent);">
+                    </a>
+                    <h4 style="font-size: 1.25rem;"><a href="{% url 'profile' profile.user.username %}" style="color: inherit;">{{ profile.user.username }}</a></h4>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px; min-height: 40px;">{{ profile.headline|default:"NexLink Visionary" }}</p>
+                    
+                    <div style="margin: 24px 0; display: flex; justify-content: center; gap: 16px; border-top: 1px solid var(--border-color); padding-top: 24px;">
+                        <div style="text-align: center;">
+                            <p style="font-weight: 700; color: var(--primary); font-size: 1.1rem;">{{ profile.user.posts.count }}</p>
+                            <p style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Insights</p>
+                        </div>
+                    </div>
+                    
+                    <a href="{% url 'profile' profile.user.username %}" class="btn btn-outline" style="width: 100%; border-radius: 12px; font-size: 0.85rem;">View Journey</a>
+                </div>
+            </div>
+        {% empty %}
+            <div class="card" style="grid-column: 1 / -1; padding: 64px; text-align: center; color: var(--text-muted);">
+                <p>Establishing connections...</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
