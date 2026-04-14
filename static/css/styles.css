@@ -1,0 +1,277 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+:root {
+    /* NexLink Pro: Premium SaaS Palette */
+    --primary: #6C63FF;
+    --primary-dark: #4B47CC;
+    --acc-pink: #FF85B3;
+    --gradient-main: linear-gradient(135deg, #6C63FF 0%, #FF85B3 100%);
+    --bg-color: #FAFAFF;
+    
+    /* Materials */
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.5);
+    --card-bg: #FFFFFF;
+    
+    /* Text */
+    --text-main: #1A1A1A;
+    --text-muted: #64748B;
+    --border-color: #F1F5F9;
+    
+    /* Layout Constants */
+    --radius-standard: 16px;
+    --radius-pill: 500px;
+    
+    /* Shadows */
+    --shadow-subtle: 0 4px 6px -1px rgba(108, 99, 255, 0.05);
+    --shadow-premium: 0 20px 50px -12px rgba(108, 99, 255, 0.12);
+    
+    /* Typography */
+    --font-heading: 'Poppins', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    
+    --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.6;
+    /* Subtle Mesh Background */
+    background-image: radial-gradient(at 0% 0%, #FDECF6 0, transparent 40%), 
+                      radial-gradient(at 100% 0%, #E6E9FC 0, transparent 40%);
+    background-attachment: fixed;
+}
+
+/* --- Reusable Components --- */
+
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+}
+
+.card-pro {
+    background: var(--card-bg);
+    border-radius: var(--radius-standard);
+    box-shadow: var(--shadow-subtle);
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+    overflow: hidden;
+}
+
+.card-pro:hover {
+    box-shadow: var(--shadow-premium);
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+}
+
+/* --- Layout --- */
+
+.navbar-pro {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.grid-3-col {
+    display: grid;
+    grid-template-columns: 280px 1fr 300px;
+    gap: 32px;
+    align-items: flex-start;
+}
+
+@media (max-width: 1200px) {
+    .grid-3-col {
+        grid-template-columns: 250px 1fr;
+    }
+    .grid-3-col > *:last-child { display: none; }
+}
+
+@media (max-width: 900px) {
+    .grid-3-col {
+        grid-template-columns: 1fr;
+    }
+    .grid-3-col > *:first-child { display: none; }
+}
+
+/* --- Buttons --- */
+
+.btn-pro {
+    padding: 12px 28px;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-pro-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-pro-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+/* --- Feed Styling --- */
+
+.post-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.post-content {
+    font-size: 1.05rem;
+    color: var(--text-main);
+    margin: 16px 0;
+}
+
+.stagger-up {
+    animation: fadeUp 0.8s var(--transition) both;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* FAB for mobile secondary */
+.fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    background: var(--gradient-main);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 10px 25px rgba(108, 99, 255, 0.3);
+    z-index: 999;
+}
+
+/* Instagram-style Heart Pop */
+@keyframes heartPop {
+    0% { transform: scale(1); }
+    15% { transform: scale(1.4); }
+    30% { transform: scale(0.9); }
+    45% { transform: scale(1.15); }
+    60% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+.animate-pop {
+    animation: heartPop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.liked {
+    color: #FF2D55 !important;
+}
+
+.delete-btn {
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.delete-btn:hover {
+    color: #FF3B30 !important;
+}
+
+/* --- Profile Hero Enhancements --- */
+.profile-hero-card {
+    border-radius: 32px;
+    overflow: hidden;
+    background: var(--card-bg);
+}
+
+.profile-banner {
+    height: 240px;
+    background: var(--gradient-main);
+    position: relative;
+}
+
+.profile-banner::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.2), transparent);
+}
+
+.profile-avatar-wrapper {
+    position: relative;
+    margin-top: -90px;
+    padding: 0 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.profile-avatar-img {
+    width: 180px;
+    height: 180px;
+    border-radius: 48px;
+    border: 8px solid var(--card-bg);
+    box-shadow: var(--shadow-premium);
+    object-fit: cover;
+    background: white;
+}
+
+.profile-info {
+    padding: 40px 48px 48px;
+}
+
+.profile-stats-pill {
+    display: inline-flex;
+    gap: 24px;
+    background: rgba(108, 99, 255, 0.04);
+    padding: 12px 32px;
+    border-radius: 20px;
+    margin-top: 24px;
+}
+
+.profile-stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-stat-value {
+    font-weight: 800;
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.profile-stat-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+}
