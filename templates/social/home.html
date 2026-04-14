@@ -14,12 +14,12 @@
             
             <div style="border-top: 1px solid var(--border-color); padding: 16px 24px; text-align: left;">
                 <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 8px;">
-                    <span style="color: var(--text-muted);">Contributions</span>
+                    <span style="color: var(--text-muted);">Posts</span>
                     <span style="color: var(--primary); font-weight: 700;">{{ user.posts.count }}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
-                    <span style="color: var(--text-muted);">Network</span>
-                    <span style="color: var(--primary); font-weight: 700;">{{ user.profile.friends.count|default:"0" }}</span>
+                    <span style="color: var(--text-muted);">Followers</span>
+                    <span style="color: var(--primary); font-weight: 700;">{{ user.profile.followers.count|default:"0" }}</span>
                 </div>
             </div>
             
@@ -94,7 +94,7 @@
                             </div>
                             
                             {% if post.author == request.user %}
-                                <a href="{% url 'post_delete' post.pk %}" class="delete-btn" onclick="return confirm('Are you sure you want to delete this professional insight?')" style="font-size: 0.9rem;">
+                                <a href="{% url 'post_delete' post.pk %}" class="delete-btn" onclick="return confirm('Are you sure you want to delete this professional post?')" style="font-size: 0.9rem;">
                                     <i class="far fa-trash-can"></i>
                                 </a>
                             {% endif %}
@@ -143,17 +143,17 @@
                 <div>
                     <p style="font-size: 0.75rem; color: var(--text-muted);">Trending in Tech</p>
                     <p style="font-weight: 700; font-size: 0.9rem;">#NexLinkBeta</p>
-                    <p style="font-size: 0.75rem; color: var(--text-muted);">2.5k contributions</p>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">2.5k posts</p>
                 </div>
                 <div>
                     <p style="font-size: 0.75rem; color: var(--text-muted);">Design News</p>
                     <p style="font-weight: 700; font-size: 0.9rem;">#Glassmorphism</p>
-                    <p style="font-size: 0.75rem; color: var(--text-muted);">1.8k contributions</p>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">1.8k posts</p>
                 </div>
                 <div>
                     <p style="font-size: 0.75rem; color: var(--text-muted);">Workplace</p>
                     <p style="font-weight: 700; font-size: 0.9rem;">#FutureOfWork</p>
-                    <p style="font-size: 0.75rem; color: var(--text-muted);">850 contributions</p>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">850 posts</p>
                 </div>
             </div>
         </div>

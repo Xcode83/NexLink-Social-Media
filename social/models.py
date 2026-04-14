@@ -9,6 +9,7 @@ class Profile(models.Model):
     bio = models.TextField(blank=True)
     headline = models.CharField(max_length=200, blank=True)
     location = models.CharField(max_length=100, blank=True)
+    following = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
 
     def __str__(self):
         return f'{self.user.username} Profile'

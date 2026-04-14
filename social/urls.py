@@ -12,6 +12,7 @@ urlpatterns = [
     path('explore/', views.explore, name='explore'),
     path('search/', views.search_users, name='search_users'),
     path('friend-request/send/<str:username>/', views.send_friend_request, name='send_friend_request'),
+    path('follow/<str:username>/', views.toggle_follow, name='toggle_follow'),
     path('friend-request/accept/<int:request_id>/', views.accept_friend_request, name='accept_friend_request'),
     path('inbox/', views.inbox, name='inbox'),
     path('chat/<str:username>/', views.chat, name='chat'),

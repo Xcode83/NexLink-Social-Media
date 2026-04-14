@@ -4,8 +4,8 @@
 {% block content %}
 <div style="max-width: 1000px; margin: 48px auto; padding: 0 16px;">
     <div style="margin-bottom: 48px;">
-        <h2 style="font-size: 2rem; letter-spacing: -0.5px; margin-bottom: 8px;">Explore the Network</h2>
-        <p style="color: var(--text-muted); font-size: 1.1rem;">Connect with professionals shaping the modern community.</p>
+        <h2 style="font-size: 2rem; letter-spacing: -0.5px; margin-bottom: 8px;">Explore the Followers</h2>
+        <p style="color: var(--text-muted); font-size: 1.1rem;">Connect with professional profiles shaping the modern community.</p>
     </div>
     
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
@@ -21,11 +21,25 @@
                     <div style="margin: 24px 0; display: flex; justify-content: center; gap: 16px; border-top: 1px solid var(--border-color); padding-top: 24px;">
                         <div style="text-align: center;">
                             <p style="font-weight: 700; color: var(--primary); font-size: 1.1rem;">{{ profile.user.posts.count }}</p>
-                            <p style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Insights</p>
+                            <p style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Posts</p>
                         </div>
                     </div>
                     
-                    <a href="{% url 'profile' profile.user.username %}" class="btn btn-outline" style="width: 100%; border-radius: 12px; font-size: 0.85rem;">View Journey</a>
+                    <a href="{% url 'profile' profile.user.username %}" class="btn btn-outline" style="width: 100%; border-radius: 12px; font-size: 0.85rem; margin-bottom: 8px;">View Journey</a>
+                    
+                    {% if profile.is_following %}
+                        <a href="{% url 'toggle_follow' profile.user.username %}" class="btn btn-outline" style="width: 100%; border-radius: 12px; font-size: 0.85rem; color: var(--text-muted); border-color: var(--border-color);">
+                            <i class="fas fa-check"></i> Following
+                        </a>
+                    {% elif profile.is_followed_by %}
+                        <a href="{% url 'toggle_follow' profile.user.username %}" class="btn" style="width: 100%; border-radius: 12px; font-size: 0.85rem; background: var(--primary); color: white; border: none;">
+                            <i class="fas fa-reply"></i> Follow Back
+                        </a>
+                    {% else %}
+                        <a href="{% url 'toggle_follow' profile.user.username %}" class="btn btn-outline" style="width: 100%; border-radius: 12px; font-size: 0.85rem; color: var(--primary); border-color: var(--primary);">
+                            <i class="fas fa-plus"></i> Follow
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         {% empty %}

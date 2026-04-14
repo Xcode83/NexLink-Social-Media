@@ -42,10 +42,15 @@ def profile(request, username):
     user_obj = get_object_or_404(User, username=username)
     posts = Post.objects.filter(author=user_obj)
     comment_form = CommentForm()
+    is_following = request.user.profile.following.filter(id=user_obj.profile.id).exists()
+    is_followed_by = user_obj.profile.following.filter(id=request.user.profile.id).exists()
+    
     return render(request, 'social/profile.html', {
         'user_obj': user_obj, 
         'posts': posts,
-        'comment_form': comment_form
+        'comment_form': comment_form,
+        'is_following': is_following,
+        'is_followed_by': is_followed_by
     })
 
 @login_required
@@ -71,6 +76,10 @@ def profile_update(request):
 @login_required
 def explore(request):
     profiles = Profile.objects.exclude(user=request.user)
+    # Add relationship context to each profile
+    for profile in profiles:
+        profile.is_following = request.user.profile.following.filter(id=profile.id).exists()
+        profile.is_followed_by = profile.following.filter(id=request.user.profile.id).exists()
     return render(request, 'social/explore.html', {'profiles': profiles})
 
 @login_required
@@ -88,6 +97,23 @@ def send_friend_request(request, username):
         FriendRequest.objects.create(from_user=request.user, to_user=to_user)
         messages.success(request, f'Friend request sent to {username}!')
     return redirect('profile', username=username)
+
+@login_required
+def toggle_follow(request, username):
+    target_user = get_object_or_404(User, username=username)
+    target_profile = target_user.profile
+    my_profile = request.user.profile
+
+    if my_profile == target_profile:
+        messages.error(request, "You cannot follow yourself!")
+    elif my_profile.following.filter(id=target_profile.id).exists():
+        my_profile.following.remove(target_profile)
+        messages.success(request, f"You stopped following {username}.")
+    else:
+        my_profile.following.add(target_profile)
+        messages.success(request, f"You are now following {username}.")
+    
+    return redirect(request.META.get('HTTP_REFERER', 'profile'), username=username)
 
 @login_required
 def accept_friend_request(request, request_id):
@@ -117,6 +143,15 @@ def inbox(request):
 @login_required
 def chat(request, username):
     other_user = get_object_or_404(User, username=username)
+    
+    # Mutual Follow Check
+    is_following = request.user.profile.following.filter(id=other_user.profile.id).exists()
+    is_followed_by = other_user.profile.following.filter(id=request.user.profile.id).exists()
+    
+    if not (is_following and is_followed_by):
+        messages.error(request, "Communication is restricted to mutual followers. Follow each other to start talking!")
+        return redirect('profile', username=username)
+
     if request.method == 'POST':
         body = request.POST.get('body')
         if body:
