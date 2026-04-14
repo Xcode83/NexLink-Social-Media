@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: nexlink-pro
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn community.wsgi:application"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: nexlink-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
+
+databases:
+  - name: nexlink-db
+    plan: free
